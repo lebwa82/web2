@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+message IdMessage {
+  int32 id = 1;
+  string hash = 2; 
+}
+
+message MyRequest {
+  repeated string content = 5;
+  IdMessage id_request = 1;
+  int32 count = 2;
+}
+
+message MyResponse {
+  IdMessage id_response = 1;
+  repeated string content = 5;
+}
+
+service TodoService {
+  rpc SendMessage(MyRequest) returns (MyResponse);
+}
