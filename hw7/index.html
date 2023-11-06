@@ -3,7 +3,31 @@
     <meta charset="UTF-8">
     <title>MY Web Push</title>
     <script>
-        const publicVapidKey = "Wlcy1pgDk3u9IXwwQJiJk2JBiN7bYNgnv0xKkEOPSM0R6QRr730b8Tv-b5MaKDjkLXVcQ4_SRlk7TMhwzOQYig==";
+        function notifyMe() {
+            if (!("Notification" in window)) {
+                // Check if the browser supports notifications
+                alert("This browser does not support desktop notification");
+            } else if (Notification.permission === "granted") {
+                // Check whether notification permissions have already been granted;
+                // if so, create a notification
+                const notification = new Notification("Hi there!");
+                // …
+            } else if (Notification.permission !== "denied") {
+                // We need to ask the user for permission
+                Notification.requestPermission().then((permission) => {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    const notification = new Notification("Hi there!");
+                    // …
+                }
+                });
+            }
+
+            // At last, if the user has denied notifications, and you
+            // want to be respectful there is no need to bother them anymore.
+            }
+
+        const publicVapidKey = "sqmtW1CNjIfz4_MU0RStD2xS22iamdR8ZzAw3U-Ow7vjCHI8SfZDbNSqz6_-4xwj-Ld9OeF8J760nVzLwEjtuA==";
 
         async function register() {
             if ('serviceWorker' in navigator) {
@@ -62,6 +86,7 @@
 </head>
 <body>
     <h1>Web Push Example</h1>
+    <button onclick="notifyMe()">Notify me!</button>
     <button onclick="fetch('/send-push', { method: 'POST' })">Send Push</button>
 </body>
 </html>
