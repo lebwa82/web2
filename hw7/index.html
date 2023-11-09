@@ -26,9 +26,6 @@
             // At last, if the user has denied notifications, and you
             // want to be respectful there is no need to bother them anymore.
             }
-
-        const publicVapidKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEE/iyiDnVl+XZ1yh3LEKjS7ADtvZqc3cZqyLpEpV7nv1XIpf5snTA8jfgRtVYUoPT2SpwOoaoD3ki5MBQzwyztA==";
-
         async function register() {
             if ('serviceWorker' in navigator) {
                 try {
@@ -46,9 +43,23 @@
 
         async function subscribe(registration) {
             try {
+                let res = await fetch("/push-cert");
+                let cert = await res.text();
+
+                registration.pushManager.getSubscription()
+                .then(function(subscription) {
+                    if (subscription) {
+                        console.log('Отписка произошла успешно');
+                        return subscription.unsubscribe();
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Ошибка при отписке от Push:', error);
+                });
+
                 const subscription = await registration.pushManager.subscribe({
                     userVisibleOnly: true,
-                    applicationServerKey: urlB64ToUint8Array(publicVapidKey),
+                    applicationServerKey: cert,
                 });
                 console.log('Subscribed to Push Notifications', subscription);
 
