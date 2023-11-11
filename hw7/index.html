@@ -1,0 +1,103 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MY Web Push</title>
+    <script>
+        function notifyMe() {
+            if (!("Notification" in window)) {
+                // Check if the browser supports notifications
+                alert("This browser does not support desktop notification");
+            } else if (Notification.permission === "granted") {
+                // Check whether notification permissions have already been granted;
+                // if so, create a notification
+                const notification = new Notification("Hi there!");
+                // …
+            } else if (Notification.permission !== "denied") {
+                // We need to ask the user for permission
+                Notification.requestPermission().then((permission) => {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    const notification = new Notification("Hi there!");
+                    // …
+                }
+                });
+            }
+
+            // At last, if the user has denied notifications, and you
+            // want to be respectful there is no need to bother them anymore.
+            }
+        async function register() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('sw.js');
+                    console.log('Service Worker Registered', registration);
+
+                    await subscribe(registration);
+                } catch (e) {
+                    console.error('Service Worker Registration Failed', e);
+                }
+            } else {
+                console.error('Service Worker is not supported in this browser.');
+            }
+        }
+
+        async function subscribe(registration) {
+            try {
+                let res = await fetch("/push-cert");
+                let cert = await res.text();
+
+                registration.pushManager.getSubscription()
+                .then(function(subscription) {
+                    if (subscription) {
+                        console.log('Отписка произошла успешно');
+                        return subscription.unsubscribe();
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Ошибка при отписке от Push:', error);
+                });
+
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: cert,
+                });
+                console.log('Subscribed to Push Notifications', subscription);
+
+                await fetch('/push', {
+                    method: 'POST',
+                    body: JSON.stringify(subscription),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log('Subscription registered on the server.');
+
+            } catch (e) {
+              console.error('Subscription to Push Notifications failed', e);
+            }
+        }
+
+        function urlB64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding)
+                .replace(/-/g, '+')
+                .replace(/_/g, '/');
+          
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+          
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        register();
+    </script>
+</head>
+<body>
+    <h1>Web Push Example</h1>
+    <button onclick="notifyMe()">Notify me!</button>
+    <button onclick="fetch('/send-push', { method: 'POST' })">Send Push</button>
+</body>
+</html>
