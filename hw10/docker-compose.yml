@@ -1,0 +1,27 @@
+version: '3'
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:latest
+    hostname: my-rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 1s
+      timeout: 3s
+      retries: 3
+
+  # producer:
+  #   build: ./producer
+  #   depends_on: 
+  #     rabbitmq:
+  #       condition: service_healthy
+    #   - subscriber
+
+  subscriber:
+    build: ./subscriber
+    depends_on: 
+      rabbitmq:
+        condition: service_healthy
