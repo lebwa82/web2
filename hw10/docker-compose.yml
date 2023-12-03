@@ -2,7 +2,7 @@ version: '3'
 services:
   rabbitmq:
     container_name: rabbitmq
-    image: rabbitmq:latest
+    image: rabbitmq:3.9
     hostname: my-rabbitmq
     ports:
       - 5672:5672
@@ -12,16 +12,11 @@ services:
       interval: 1s
       timeout: 3s
       retries: 3
-
-  # producer:
-  #   build: ./producer
-  #   depends_on: 
-  #     rabbitmq:
-  #       condition: service_healthy
-    #   - subscriber
-
+      
   subscriber:
     build: ./subscriber
-    depends_on: 
-      rabbitmq:
-        condition: service_healthy
+    command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "python", "subscriber.py"]
+
+  producer:
+    build: ./producer
+    command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "python", "producer.py"]
