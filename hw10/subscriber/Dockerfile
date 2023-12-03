@@ -6,10 +6,10 @@ WORKDIR /hw10/subscriber
 
 # копирование содержимого локальной директории src в рабочую директорию
 COPY . /hw10/subscriber
-COPY requirements.txt /hw10/subscriber/requirements.txt
 
 # установка зависимостей
 RUN pip install -r /hw10/subscriber/requirements.txt
+RUN chmod +x wait-for-it.sh
 
 # команда, выполняемая при запуске контейнера
-CMD ["python", "subscriber.py" ]
+# CMD ["python", "subscriber.py" ]
