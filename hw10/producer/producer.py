@@ -1,5 +1,5 @@
 import pika
-from myproto_pb2 import MyRequest, MyResponse, IdMessage
+from myproto_pb2 import MyRequest, MyResponse, IdMessage # pylint: disable=no-name-in-module
 
 # time.sleep(5)
 conn_params = pika.ConnectionParameters('rabbitmq', 5672)
