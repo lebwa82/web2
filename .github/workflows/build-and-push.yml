@@ -25,7 +25,8 @@ jobs:
         - name: Run linter
           run: |
             pip install pylint
-            pylint hw10/producer/producer.py
+            pip install pylint-protobuf
+            pylint --load-plugins=pylint_protobuf hw10/producer/producer.py
 
 
   build:
