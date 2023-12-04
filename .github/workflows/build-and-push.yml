@@ -49,4 +49,4 @@ jobs:
             #file: hw11/Dockerfile
             context: hw11
             push: true
-            tags: ${{ secrets.DOCKER_USERNAME }}/hw11:latest
+            tags: ${{ vars.DOCKER_USERNAME }}/hw11:latest

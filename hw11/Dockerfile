@@ -12,4 +12,4 @@ RUN pip install -r /hw11/requirements.txt
 
 
 # команда, выполняемая при запуске контейнера
-# CMD ["python", "producer.py"]
+CMD ["python", "producer.py"]
