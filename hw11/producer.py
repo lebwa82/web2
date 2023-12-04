@@ -1,7 +1,7 @@
+# pylint: disable=missing-module-docstring
 import pika
-from myproto_pb2 import MyRequest, MyResponse, IdMessage # pylint: disable=no-name-in-module
+from myproto_pb2 import IdMessage # pylint: disable=no-name-in-module
 
-# time.sleep(5)
 conn_params = pika.ConnectionParameters('rabbitmq', 5672)
 connection = pika.BlockingConnection(conn_params)
 channel = connection.channel()
