@@ -20,13 +20,13 @@ jobs:
         - name: Install dependencies
           run: |
             pip install --upgrade pip
-            pip install -r hw10/producer/requirements.txt
+            pip install -r hw11/requirements.txt
 
         - name: Run linter
           run: |
             pip install pylint
             pip install pylint-protobuf
-            pylint --load-plugins=pylint_protobuf hw10/producer/producer.py
+            pylint --load-plugins=pylint_protobuf hw11/producer.py
 
 
   build:
